@@ -20,19 +20,19 @@ Provides following functions:
 Linux:
 
 ```
-gcc -fPIC -lm -shared src/stats.c -o dist/sqlite3-stats-linux.so
+gcc -fPIC -lm -shared src/stats.c -o dist/sqlite3-stats.so
 ```
 
 Mac OS X:
 
 ```
-gcc -fno-common -dynamiclib src/stats.c -o dist/sqlite3-stats-osx.dylib
+gcc -fno-common -dynamiclib src/stats.c -o dist/sqlite3-stats.dylib
 ```
 
 Windows:
 
 ```
-gcc -shared -I ./src src/stats.c -o dist/sqlite3-stats-win32.so
+gcc -shared -I ./src src/stats.c -o dist/sqlite3-stats.dll
 ```
 
 ## SQLite CLI usage
