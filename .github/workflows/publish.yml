@@ -1,0 +1,48 @@
+name: Publish
+
+on:
+    push:
+        tags:
+            - "*"
+
+jobs:
+    publish:
+        name: Publish for ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                include:
+                    - os: ubuntu-latest
+                      artifact_name: sqlite3-stats.so
+                      asset_name: sqlite3-stats-linux
+                    - os: windows-latest
+                      artifact_name: sqlite3-stats.dll
+                      asset_name: sqlite3-stats-windows
+                    - os: macos-latest
+                      artifact_name: sqlite3-stats.dylib
+                      asset_name: sqlite3-stats-macos
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - run: mkdir dist
+
+            - name: Build for Linux
+              if: matrix.os == 'ubuntu-latest'
+              run: gcc -fPIC -lm -shared src/stats.c -o dist/sqlite3-stats.so
+
+            - name: Build for Windows
+              if: matrix.os == 'windows-latest'
+              run: gcc -shared -I ./src src/stats.c -o dist/sqlite3-stats.dll
+
+            - name: Build for macOS
+              if: matrix.os == 'macos-latest'
+              run: gcc -fno-common -dynamiclib src/stats.c -o dist/sqlite3-stats.dylib
+
+            - name: Upload binaries to release
+              uses: svenstaro/upload-release-action@v2
+              with:
+                  repo_token: ${{ secrets.GITHUB_TOKEN }}
+                  file: dist/${{ matrix.artifact_name }}
+                  asset_name: ${{ matrix.asset_name }}
+                  tag: ${{ github.ref }}
