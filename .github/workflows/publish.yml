@@ -14,13 +14,10 @@ jobs:
                 include:
                     - os: ubuntu-latest
                       artifact_name: sqlite3-stats.so
-                      asset_name: sqlite3-stats-linux
                     - os: windows-latest
                       artifact_name: sqlite3-stats.dll
-                      asset_name: sqlite3-stats-windows
                     - os: macos-latest
                       artifact_name: sqlite3-stats.dylib
-                      asset_name: sqlite3-stats-macos
 
         steps:
             - uses: actions/checkout@v2
