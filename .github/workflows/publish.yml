@@ -30,7 +30,7 @@ jobs:
 
             - name: Build for Windows
               if: matrix.os == 'windows-latest'
-              run: gcc -fPIC -lm -shared -m32 src/stats.c -o dist/sqlite3-stats.dll
+              run: gcc -fPIC -lm -shared src/stats.c -o dist/sqlite3-stats.dll
 
             - name: Build for macOS
               if: matrix.os == 'macos-latest'
