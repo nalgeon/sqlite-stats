@@ -499,7 +499,7 @@ static void percentile_99Finalize(sqlite3_context *context){
 }
 
 /*
-** Returns the stddev value
+** Returns the sample standard deviation value
 */
 static void stddevFinalize(sqlite3_context *context){
   StddevCtx *p;
@@ -512,13 +512,39 @@ static void stddevFinalize(sqlite3_context *context){
 }
 
 /*
-** Returns the variance value
+** Returns the population standard deviation value
+*/
+static void stddevpopFinalize(sqlite3_context *context){
+  StddevCtx *p;
+  p = sqlite3_aggregate_context(context, 0);
+  if( p && p->cnt>1 ){
+    sqlite3_result_double(context, sqrt(p->rS/p->cnt));
+  }else{
+    sqlite3_result_double(context, 0.0);
+  }
+}
+
+/*
+** Returns the sample variance value
 */
 static void varianceFinalize(sqlite3_context *context){
   StddevCtx *p;
   p = sqlite3_aggregate_context(context, 0);
   if( p && p->cnt>1 ){
     sqlite3_result_double(context, p->rS/(p->cnt-1));
+  }else{
+    sqlite3_result_double(context, 0.0);
+  }
+}
+
+/*
+** Returns the population variance value
+*/
+static void variancepopFinalize(sqlite3_context *context){
+  StddevCtx *p;
+  p = sqlite3_aggregate_context(context, 0);
+  if( p && p->cnt>1 ){
+    sqlite3_result_double(context, p->rS/p->cnt);
   }else{
     sqlite3_result_double(context, 0.0);
   }
@@ -539,7 +565,11 @@ int RegisterExtensionFunctions(sqlite3 *db){
     void (*xFinalize)(sqlite3_context*);
   } aAggs[] = {
     { "stddev",        1, 0, 0, varianceStep, stddevFinalize  },
+    { "stddev_samp",   1, 0, 0, varianceStep, stddevFinalize  },
+    { "stddev_pop",    1, 0, 0, varianceStep, stddevpopFinalize  },
     { "variance",      1, 0, 0, varianceStep, varianceFinalize  },
+    { "var_samp",      1, 0, 0, varianceStep, varianceFinalize  },
+    { "var_pop",       1, 0, 0, varianceStep, variancepopFinalize  },
     { "mode",          1, 0, 0, modeStep,     modeFinalize  },
     { "median",        1, 0, 0, modeStep,     medianFinalize  },
     { "percentile_25", 1, 0, 0, modeStep,     percentile_25Finalize  },
