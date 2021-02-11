@@ -71,13 +71,24 @@ from tbl;
 
 ## In-app usage
 
-In your application, call `sqlite3_enable_load_extension(db, 1)`
-to allow loading external libraries. Then load the library
-using `sqlite3_load_extension()`, the third argument should be 0.
-See <https://sqlite.org/loadext.html> for details.
+Typically there are two necessary actions:
 
-Select statements may now use stat functions, as in
-`SELECT median(val) FROM table;`
+1. Enable extension loading.
+2. Load specific extension.
+
+See your SQLite driver / library documentation for details.
+
+For example, in Python:
+
+```python
+import sqlite3
+
+connection = sqlite3.connect(":memory:")
+connection.enable_load_extension(True)
+connection.load_extension("./sqlite3-stats.so")
+connection.execute("select median(1)")
+connection.close()
+```
 
 ## Building from source
 
