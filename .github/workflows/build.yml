@@ -1,9 +1,0 @@
-name: Build
-on: [push]
-jobs:
-    build-linux:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - run: mkdir dist
-            - run: gcc -fPIC -lm -shared src/stats.c -o dist/sqlite3-stats.so
