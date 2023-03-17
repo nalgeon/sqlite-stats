@@ -1,5 +1,7 @@
 # SQLite statistical functions
 
+**⚠️ This extension is deprecated. Use [sqlean-stats](https://github.com/nalgeon/sqlean/blob/main/docs/stats.md) instead.**
+
 This library provides common statistical functions for SQLite.
 Adapted from [extension-functions.c](https://sqlite.org/contrib/) by Liam Healy.
 
